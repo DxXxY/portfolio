@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Портфолио — адаптивная вёрстка лендингов</title>
+<meta name="description" content="Примеры адаптивной вёрстки на чистом HTML и CSS: 10 лендингов для разных ниш.">
+<style>
+  :root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--soft:#6b6b70;--line:#e5e3de;--accent:#3b5bdb}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1120px;margin:0 auto;padding:56px 20px}
+  h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin-bottom:10px}
+  .lead{color:var(--soft);font-size:17px;max-width:640px;margin-bottom:36px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  a.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s}
+  a.card:hover{transform:translateY(-3px);box-shadow:0 18px 36px -20px rgba(0,0,0,.35)}
+  a.card img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;background:#eee}
+  .body{padding:16px 18px 18px}
+  .body b{display:block;font-size:17px;margin-bottom:4px}
+  .body span{color:var(--soft);font-size:14px}
+  .note{margin-top:36px;color:var(--soft);font-size:14px}
+  @media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1d1d20;--ink:#f2f2f3;--soft:#a1a1a8;--line:#2c2c30}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Адаптивная вёрстка лендингов</h1>
+  <p class="lead">Чистый HTML и CSS, без конструкторов. Каждый сайт подстраивается под компьютер, планшет и телефон — откройте и посмотрите код в браузере (Ctrl+U).</p>
+  <div class="grid">
+    <a class="card" href="barbershop/"><img src="covers/barbershop.jpg" alt="" loading="lazy"><div class="body"><b>Барбершоп «Бритва»</b><span>Мужские стрижки, запись онлайн</span></div></a>
+    <a class="card" href="detailing/"><img src="covers/detailing.jpg" alt="" loading="lazy"><div class="body"><b>GLOSS — детейлинг</b><span>Защитные покрытия для авто</span></div></a>
+    <a class="card" href="law/"><img src="covers/law.jpg" alt="" loading="lazy"><div class="body"><b>«Право и Дело»</b><span>Юридическая помощь бизнесу и людям</span></div></a>
+    <a class="card" href="residential/"><img src="covers/residential.jpg" alt="" loading="lazy"><div class="body"><b>ЖК «Северный парк»</b><span>Жилой комплекс, планировки</span></div></a>
+    <a class="card" href="vet-clinic/"><img src="covers/vet-clinic.jpg" alt="" loading="lazy"><div class="body"><b>Ветклиника «Лапа»</b><span>Круглосуточная клиника</span></div></a>
+    <a class="card" href="python-course/"><img src="covers/python-course.jpg" alt="" loading="lazy"><div class="body"><b>«Python с нуля»</b><span>Онлайн-курс</span></div></a>
+    <a class="card" href="flowers/"><img src="covers/flowers.jpg" alt="" loading="lazy"><div class="body"><b>«Флора»</b><span>Авторские букеты с доставкой</span></div></a>
+    <a class="card" href="photo-studio/"><img src="covers/photo-studio.jpg" alt="" loading="lazy"><div class="body"><b>Фотостудия «Кадр»</b><span>Портреты, семьи, бренды</span></div></a>
+    <a class="card" href="cleaning/"><img src="covers/cleaning.jpg" alt="" loading="lazy"><div class="body"><b>«Чистый дом»</b><span>Уборка квартир и офисов</span></div></a>
+    <a class="card" href="psychologist/"><img src="covers/psychologist.jpg" alt="" loading="lazy"><div class="body"><b>Психолог — консультации</b><span>Личный сайт специалиста</span></div></a>
+  </div>
+  <p class="note">Это демонстрационные работы: названия и тексты придуманы для примера. Фото — Unsplash.</p>
+</main>
+</body>
+</html>
