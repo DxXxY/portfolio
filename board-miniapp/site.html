@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Объява — основной сайт (демо синхронизации с Mini App)</title>
+<script src="store.js"></script>
+<style>
+  :root { --bg: #f4f5f8; --card: #fff; --text: #14171c; --hint: #7b818c; --acc: #2481cc; --ok: #30a46c; --line: #e6e8ee; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0f141a; --card: #18202a; --text: #eef1f5; --hint: #8b95a3; --acc: #5aa7ec; --line: #26303c; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.4 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+  .bar { display: flex; align-items: center; gap: 16px; height: 64px; }
+  .logo { font-weight: 800; font-size: 24px; letter-spacing: -.5px; }
+  .logo b { color: var(--acc); }
+  .bar input { flex: 1; max-width: 520px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+  .post { margin-left: auto; background: var(--acc); color: #fff; border: 0; border-radius: 10px; padding: 10px 18px; font-weight: 600; cursor: pointer; }
+  .live { font-size: 13px; color: var(--hint); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: p 2s infinite; }
+  @keyframes p { 50% { opacity: .35; } }
+
+  .banner { margin: 18px 0; padding: 14px 18px; border-radius: 14px; background: linear-gradient(120deg, #2481cc, #6a5af9); color: #fff;
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .banner a { color: #fff; font-weight: 700; }
+  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 20px; padding-bottom: 40px; }
+  aside { background: var(--card); border-radius: 14px; padding: 10px; align-self: start; position: sticky; top: 80px; }
+  aside button { display: flex; gap: 8px; width: 100%; text-align: left; padding: 9px 10px; border: 0; background: none; border-radius: 8px; cursor: pointer; }
+  aside button.on { background: var(--bg); color: var(--acc); font-weight: 600; }
+  aside small { margin-left: auto; color: var(--hint); }
+  .head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+  .head h2 { margin: 0; font-size: 22px; }
+  .head span { color: var(--hint); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .card { background: var(--card); border-radius: 14px; overflow: hidden; transition: transform .15s; }
+  .card:hover { transform: translateY(-2px); }
+  .card.fresh { animation: fresh 2.2s ease; }
+  @keyframes fresh { 0% { box-shadow: 0 0 0 4px var(--acc); transform: scale(.95); } 100% { box-shadow: none; transform: none; } }
+  .ph { aspect-ratio: 4/3; display: grid; place-items: center; font-size: 48px; position: relative; }
+  .src { position: absolute; left: 8px; bottom: 8px; font-size: 12px; padding: 3px 8px; border-radius: 8px; background: rgba(0,0,0,.5); color: #fff; }
+  .info { padding: 10px 12px 12px; }
+  .price { font-weight: 800; font-size: 18px; }
+  .ttl { margin: 2px 0 6px; }
+  .meta { font-size: 13px; color: var(--hint); }
+
+  dialog { border: 0; border-radius: 16px; padding: 22px; width: min(460px, 92vw); background: var(--card); color: var(--text); }
+  dialog::backdrop { background: rgba(0,0,0,.45); }
+  dialog label { display: block; font-size: 13px; color: var(--hint); margin: 10px 0 4px; }
+  dialog input, dialog select, dialog textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+  .btns { display: flex; gap: 10px; margin-top: 16px; }
+  .btns button { flex: 1; padding: 11px; border-radius: 10px; border: 0; cursor: pointer; font-weight: 600; }
+  .toast { position: fixed; right: 20px; bottom: 20px; background: #14171c; color: #fff; padding: 12px 16px; border-radius: 12px;
+    transform: translateY(150%); transition: transform .3s; z-index: 30; }
+  .toast.show { transform: none; }
+  @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } aside { position: static; display: flex; overflow-x: auto; }
+    aside button { width: auto; white-space: nowrap; } aside small { display: none; } .live { display: none; } .bar input { min-width: 0; } }
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <div class="logo">Объ<b>ява</b></div>
+  <input id="q" placeholder="Поиск по всем объявлениям">
+  <div class="live"><span class="dot"></span>в реальном времени</div>
+  <button class="post" id="postBtn">＋ Подать объявление</button>
+</div></header>
+
+<div class="wrap">
+  <div class="banner">
+    <div style="font-size:28px">✈️</div>
+    <div><b>Демо: сайт и Telegram Mini App работают с одной базой.</b><br>
+      Откройте <a href="index.html" target="_blank">Mini App</a> в соседней вкладке (или в Telegram), подайте и одобрите объявление — оно появится здесь без перезагрузки.</div>
+  </div>
+  <div class="layout">
+    <aside id="cats"></aside>
+    <section><div class="head"><h2 id="catTitle">Все объявления</h2><span id="count"></span></div><div class="grid" id="grid"></div></section>
+  </div>
+</div>
+
+<dialog id="dlg"><form method="dialog" id="f">
+  <h2 style="margin:0 0 4px">Новое объявление</h2>
+  <div class="meta">Подаётся с сайта и сразу попадает в Telegram Mini App (после модерации).</div>
+  <label>Категория</label><select name="cat"></select>
+  <label>Название</label><input name="title" required maxlength="70">
+  <label>Цена, ₽</label><input name="price" type="number" min="0" required>
+  <label>Город</label><input name="city" value="Новороссийск" required>
+  <label>Описание</label><textarea name="desc" rows="3"></textarea>
+  <div class="btns"><button value="cancel" formnovalidate style="background:var(--bg)">Отмена</button>
+    <button value="ok" style="background:var(--acc);color:#fff">Отправить</button></div>
+</form></dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let cat = 'all', q = '', fresh = null;
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 3200); }
+function render() {
+  const active = Store.all().filter(a => a.status === 'active');
+  $('#cats').innerHTML = Store.CATS.map(c => `<button data-cat="${c.id}" class="${c.id === cat ? 'on' : ''}">${c.icon} ${c.name}
+    <small>${c.id === 'all' ? active.length : active.filter(a => a.cat === c.id).length}</small></button>`).join('');
+  const ql = q.trim().toLowerCase();
+  const list = active.filter(a => (cat === 'all' || a.cat === cat) && (!ql || (a.title + ' ' + a.desc + ' ' + a.city).toLowerCase().includes(ql)));
+  $('#catTitle').textContent = cat === 'all' ? 'Все объявления' : Store.catName(cat);
+  $('#count').textContent = list.length + ' шт.';
+  $('#grid').innerHTML = list.map(a => `<div class="card ${a.id === fresh ? 'fresh' : ''}">
+    <div class="ph" style="background:${Store.cover(a)}">${a.photo ? '' : Store.icon(a.cat)}<span class="src">${a.source === 'tg' ? '✈️ из Telegram' : '🌐 с сайта'}</span></div>
+    <div class="info"><div class="price">${esc(Store.price(a))}</div><div class="ttl">${esc(a.title)}</div>
+      <div class="meta">${esc(a.city)} · ${Store.ago(a.createdAt)} · ${esc(a.author)}</div></div></div>`).join('')
+    || '<div class="meta">Ничего не найдено</div>';
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (b) { cat = b.dataset.cat; render(); } });
+$('#q').oninput = e => { q = e.target.value; render(); };
+$('[name=cat]').innerHTML = Store.CATS.filter(c => c.id !== 'all').map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+$('#postBtn').onclick = () => $('#dlg').showModal();
+$('#dlg').addEventListener('close', () => {
+  if ($('#dlg').returnValue !== 'ok') return;
+  const d = Object.fromEntries(new FormData($('#f')));
+  Store.add({ cat: d.cat, title: d.title, price: +d.price || 0, city: d.city, desc: d.desc, author: 'Гость сайта', photo: '', source: 'site' });
+  $('#f').reset(); toast('Отправлено на модерацию — одобрить можно в Mini App, вкладка «Модерация»');
+});
+Store.subscribe((evt, local) => {
+  if (!local && evt && (evt.type === 'status' && evt.status === 'active')) { fresh = evt.id; toast('🆕 Новое объявление из Telegram'); }
+  render(); setTimeout(() => { fresh = null; }, 2300);
+});
+setInterval(render, 60000);
+render();
+</script>
+</body>
+</html>
